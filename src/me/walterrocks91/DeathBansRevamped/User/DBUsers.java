@@ -13,6 +13,8 @@ public class DBUsers {
         allUsers.add(user);
     }
 
+    protected static void removeUser(DBUser user) { allUsers.remove(user); }
+
     public static DBUser getFromPlayer(Player p){
         for(DBUser user : allUsers){
             if(user.getPlayer().getName().equalsIgnoreCase(p.getName())){
@@ -29,5 +31,11 @@ public class DBUsers {
             }
         }
         addUser(getFromPlayer(p));
+    }
+
+    public static void unregisterDBUser(DBUser user){
+        if(allUsers.contains(user)){
+            allUsers.remove(user);
+        }
     }
 }

@@ -1,8 +1,7 @@
 package me.walterrocks91.DeathBansRevamped;
 
 import me.walterrocks91.DeathBansRevamped.API.API;
-import me.walterrocks91.DeathBansRevamped.Events.Death;
-import me.walterrocks91.DeathBansRevamped.Events.Login;
+import me.walterrocks91.DeathBansRevamped.Events.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +24,8 @@ public class Main extends JavaPlugin {
         Manager.setup(this);
         getServer().getPluginManager().registerEvents(new Death(), this);
         getServer().getPluginManager().registerEvents(new Login(), this);
+        getServer().getPluginManager().registerEvents(new Join(), this);
+        getServer().getPluginManager().registerEvents(new Quit(), this);
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

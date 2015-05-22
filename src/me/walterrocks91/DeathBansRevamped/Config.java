@@ -1,11 +1,17 @@
 package me.walterrocks91.DeathBansRevamped;
 
-import me.walterrocks91.DeathBansRevamped.Main;
-import me.walterrocks91.DeathBansRevamped.Manager;
 import org.bukkit.configuration.file.FileConfiguration;
 import java.io.IOException;
 
 public class Config {
+
+    /*
+     * Config:
+     *   ban-length: 90
+     *   timeframe: minute
+     *   kick-reason: '&cYou have died, and have now been deathbanned!'
+     *   ban-reason: '&cYou have been deathbanned for %time%.'
+     */
 
     /*
      * Getting configuration files.
