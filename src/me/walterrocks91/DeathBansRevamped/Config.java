@@ -1,6 +1,7 @@
 package me.walterrocks91.DeathBansRevamped;
 
 import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.IOException;
 
 public class Config {
@@ -32,11 +33,16 @@ public class Config {
         return Manager.timer;
     }
 
+    public static FileConfiguration getExempt() {
+        return Manager.exempt;
+    }
+
     public static void saveAll(){
         try{
             Manager.bans.save(Manager.bansF);
             Manager.lives.save(Manager.livesF);
             Manager.timer.save(Manager.timerF);
+            Manager.exempt.save(Manager.exemptF);
             Main.getInstance().saveConfig();
         }catch(IOException e){
             e.printStackTrace();

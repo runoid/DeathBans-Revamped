@@ -5,6 +5,7 @@ import me.walterrocks91.DeathBansRevamped.Main;
 import me.walterrocks91.DeathBansRevamped.Other.UUIDFetcher;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class API {
     }
 
     public static void sendMessage(CommandSender sender, String msg){
-        sender.sendMessage(prefix + msg.replaceAll("&", "§"));
+        sender.sendMessage(prefix + parseColoredString(msg));
     }
 
     public static boolean checkBan(String player){
@@ -108,5 +109,75 @@ public class API {
 
     public static String parseColoredString(String string){
         return string.replaceAll("&", "§");
+    }
+
+    public static boolean addExemption(String player) {
+        String uuid = null;
+        try {
+            uuid = UUIDFetcher.getUUIDOf(player).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<String> list = Config.getExempt().getStringList("exempt");
+        if (list == null) {
+            list = new ArrayList<String>();
+        }
+        if (list.contains(uuid)) return false;
+        list.add(uuid);
+        Config.getExempt().set("exempt", list);
+        Config.saveAll();
+        return true;
+    }
+
+    public static boolean addExemption(UUID u) {
+        String uuid = u.toString();
+        List<String> list = Config.getExempt().getStringList("exempt");
+        if (list == null) {
+            list = new ArrayList<String>();
+        }
+        if (list.contains(uuid)) return false;
+        list.add(uuid);
+        Config.getExempt().set("exempt", list);
+        Config.saveAll();
+        return true;
+    }
+
+    public static boolean removeExemption(String player) {
+        String uuid = null;
+        try {
+            uuid = UUIDFetcher.getUUIDOf(player).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<String> list = Config.getExempt().getStringList("exempt");
+        if (list == null) {
+            list = new ArrayList<String>();
+        }
+        if (!list.contains(uuid)) return false;
+        list.remove(uuid);
+        Config.getExempt().set("exempt", list);
+        Config.saveAll();
+        return true;
+    }
+
+    public static boolean removeExemption(UUID u) {
+        String uuid = u.toString();
+        List<String> list = Config.getExempt().getStringList("exempt");
+        if (list == null) {
+            list = new ArrayList<String>();
+        }
+        if (!list.contains(uuid)) return false;
+        list.remove(uuid);
+        Config.getExempt().set("exempt", list);
+        Config.saveAll();
+        return true;
+    }
+
+    public static void changeLives(String player, int amount) {
+
+    }
+
+    public static void changeLives(UUID uuid, int amount) {
+
     }
 }
