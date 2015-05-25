@@ -16,26 +16,23 @@ public class DBUsers {
     protected static void removeUser(DBUser user) { allUsers.remove(user); }
 
     public static DBUser getFromPlayer(Player p){
-        for(DBUser user : allUsers){
-            if(user.getPlayer().getName().equalsIgnoreCase(p.getName())){
-                return user;
-            }
-        }
+        for (DBUser user : allUsers)
+            if (user.getPlayer().getName().equalsIgnoreCase(p.getName())) return user;
         return null;
     }
 
     public static void registerDBUser(Player p){
-        for(DBUser u : allUsers){
-            if(u.getPlayer().getName().equalsIgnoreCase(p.getName())){
-                return;
-            }
-        }
+        for (DBUser u : allUsers)
+            if (u.getPlayer().getName().equalsIgnoreCase(p.getName())) return;
         addUser(getFromPlayer(p));
     }
 
     public static void unregisterDBUser(DBUser user){
-        if(allUsers.contains(user)){
+        if (allUsers.contains(user))
             allUsers.remove(user);
-        }
+    }
+
+    public static List<DBUser> getAllUsers() {
+        return allUsers;
     }
 }

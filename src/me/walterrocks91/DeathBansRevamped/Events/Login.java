@@ -7,13 +7,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 public class Login implements Listener{
-
     @EventHandler
     public void onLogin(PlayerLoginEvent e){
         String u = e.getPlayer().getUniqueId().toString();
-        if(Config.getBans().getStringList("banned").contains(u)){
+        if (Config.getBans().getStringList("banned").contains(u))
             e.disallow(PlayerLoginEvent.Result.KICK_BANNED, API.parseColoredString(API.getBanReason().replaceAll("%remaining%", API.parseTime(Config.getTimer().getInt(u)))));
-        }
     }
-
 }

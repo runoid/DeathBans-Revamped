@@ -51,80 +51,69 @@ public class Main extends JavaPlugin {
                     }
                     return true;
                 }else if(args[0].equalsIgnoreCase("check")){
-                    if (l == 1) {
+                    if (l != 1) {
                         API.sendMessage(sender, "&cInvalid arguments");
                         API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
                         return true;
                     }
-                    if (l >= 2) {
-                        API.sendMessage(sender, "&cInvalid arguments");
-                        API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
-                        return true;
-                    }
-                    if (API.checkBan(args[1])) {
+                    if (API.checkBan(args[1]))
                         API.sendMessage(sender, "&eThe player &f" + args[1] + "&eis &ccurrently banned.");
-                    } else {
+                    else
                         API.sendMessage(sender, "&eThe player &f" + args[1] + "&eis &anot currently banned.");
-                    }
                     return true;
                 }else if(args[0].equalsIgnoreCase("unban")){
-                    if (l == 1) {
-                        API.sendMessage(sender, "&cInvalid arguments");
-                        API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
-                        return true;
-                    }
-                    if (l >= 2) {
+                    if (l != 2) {
                         API.sendMessage(sender, "&cInvalid arguments");
                         API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
                         return true;
                     }
                     try {
-                        if (API.unban(args[1])) {
+                        if (API.unban(args[1]))
                             API.sendMessage(sender, "&eSuccessfully unbanned &f" + args[1]);
-                        } else {
+                        else
                             API.sendMessage(sender, "&eUn-Successfully unbanned &f" + args[1] + "&e. Player was not banned.");
-                        }
                     } catch (Exception e) {
                         API.sendMessage(sender, "&cInvalid player specified. Could not get UUID of " + args[1]);
                     }
                     return true;
                 }else if(args[0].equalsIgnoreCase("exempt")){
-                    if (l == 1) {
+                    if (l != 2) {
                         API.sendMessage(sender, "&cInvalid arguments");
                         API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
                         return true;
                     }
-                    if (l >= 2) {
-                        API.sendMessage(sender, "&cInvalid arguments");
-                        API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
-                        return true;
-                    }
-                    if (API.addExemption(args[1])) {
+                    if (API.addExemption(args[1]))
                         API.sendMessage(sender, "&ePlayer &f" + args[1] + " &eis now immune to deathbans.");
-                    } else {
+                    else
                         API.sendMessage(sender, "&ePlayer &f" + args[1] + " &ewas already immune to deathbans.");
-                    }
                     return true;
                 }else if(args[0].equalsIgnoreCase("unexempt")){
-                    if (l == 1) {
+                    if (l != 2) {
                         API.sendMessage(sender, "&cInvalid arguments");
                         API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
                         return true;
                     }
-                    if (l >= 2) {
-                        API.sendMessage(sender, "&cInvalid arguments");
-                        API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
-                        return true;
-                    }
-                    if (API.removeExemption(args[1])) {
+                    if (API.removeExemption(args[1]))
                         API.sendMessage(sender, "&ePlayer &f" + args[1] + " &eis no longer immune to deathbans.");
-                    } else {
+                    else
                         API.sendMessage(sender, "&ePlayer &f" + args[1] + " &ewas not immune to deathbans.");
-                    }
                 }else if(args[0].equalsIgnoreCase("editlives")){
-
+                    if (l != 5) {
+                        API.sendMessage(sender, "&cInvalid arguments");
+                        API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
+                        return true;
+                    }
+                    if (args[2].equalsIgnoreCase("take"))
+                        API.changeLives(args[3], -(Integer.parseInt(args[4])));
+                    else if (args[2].equalsIgnoreCase("give"))
+                        API.changeLives(args[3], (Integer.parseInt(args[4])));
+                    else {
+                        API.sendMessage(sender, "&cInvalid arguments");
+                        API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
+                        return true;
+                    }
                 }else if(args[0].equalsIgnoreCase("update")){
-
+                    // TODO: Coming soon <3
                 }else{
                     API.sendMessage(sender, "&cIncorrect / Invalid SubCommand.");
                     API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
