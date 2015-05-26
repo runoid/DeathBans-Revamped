@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.concurrent.Callable;
 
 /*
- * Credits to: evilmidget38
+ * All Credits to evilmidget38
  */
 @SuppressWarnings("all")
 public class UUIDFetcher implements Callable<Map<String, UUID>> {

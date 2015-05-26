@@ -215,6 +215,9 @@ public class API {
         if (lives < 0) {
             lives = 0;
         }
+        if (uuid == null) {
+            return;
+        }
         Config.getLives().set(uuid, lives);
         Config.saveAll();
     }
