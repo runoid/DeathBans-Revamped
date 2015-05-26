@@ -2,6 +2,7 @@ package me.walterrocks91.DeathBansRevamped.User;
 
 import me.walterrocks91.DeathBansRevamped.API.API;
 import me.walterrocks91.DeathBansRevamped.Config;
+import me.walterrocks91.DeathBansRevamped.Events.Custom.PlayerDeathbannedEvent;
 import me.walterrocks91.DeathBansRevamped.Main;
 import org.bukkit.entity.Player;
 
@@ -24,6 +25,10 @@ public class DBUser {
     }
 
     public void ban(){
+        if (Config.getExempt().getStringList("exempt").contains(player.getUniqueId().toString())) return;
+        PlayerDeathbannedEvent event = new PlayerDeathbannedEvent(DBUsers.getFromPlayer(player));
+        Main.getInstance().getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) return;
         final String u = player.getUniqueId().toString();
         List<String> list = Config.getBans().getStringList("banned");
         if(list == null){
@@ -37,11 +42,14 @@ public class DBUser {
             public void run(){
                 if(Config.getTimer().getInt(u) <= 0){
                     Main.getInstance().getServer().getScheduler().cancelTask(banTask);
+                    Config.getTimer().set(u, null);
+                    Config.saveAll();
+                    return;
                 }
                 Config.getTimer().set(u, Config.getTimer().getInt(u)-1);
                 Config.saveAll();
             }
         }, 0, 1*20);
-        player.kickPlayer(API.getKickReason());
+        player.kickPlayer(API.parseColoredString(API.getKickReason()));
     }
 }

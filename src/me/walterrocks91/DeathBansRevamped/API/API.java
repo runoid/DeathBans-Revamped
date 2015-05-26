@@ -5,7 +5,9 @@ import me.walterrocks91.DeathBansRevamped.Main;
 import me.walterrocks91.DeathBansRevamped.Other.UUIDFetcher;
 import org.bukkit.command.CommandSender;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class API {
 
@@ -21,13 +23,8 @@ public class API {
 
     private static String prefix = "";
 
-    protected static Map<String, Integer> tasks = new HashMap<String, Integer>();
-
-    public API(){
-        prefix = Config.getConfig().getString("prefix").replaceAll("&", "§");
-    }
-
     public static void sendMessage(CommandSender sender, String msg){
+        prefix = API.parseColoredString(Config.getConfig().getString("prefix") + " &f");
         sender.sendMessage(prefix + parseColoredString(msg));
     }
 
@@ -54,7 +51,9 @@ public class API {
                 List<String> list = Config.getBans().getStringList("banned");
                 list.remove(uuid);
                 Config.getBans().set("banned", list);
+                Config.getTimer().set(uuid, null);
                 Config.saveAll();
+                return true;
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -66,6 +65,7 @@ public class API {
             List<String> list = Config.getBans().getStringList("banned");
             list.remove(uuid.toString());
             Config.getBans().set("banned", list);
+            Config.getTimer().set(uuid.toString(), null);
             Config.saveAll();
             return true;
         }
@@ -109,7 +109,19 @@ public class API {
             minutes -= 60;
             hours += 1;
         }
-        return ""+hours+":"+minutes+"h "+seconds+"s";
+        String hourString = "";
+        String minuteString = "";
+        String secondString = "";
+        if (hours < 10)
+            hourString = "0" + hours;
+        else hourString = "" + hours;
+        if (minutes < 10)
+            minuteString = "0" + minutes;
+        else minuteString = "" + minutes;
+        if (seconds < 10)
+            secondString = "0" + seconds;
+        else secondString = "" + seconds;
+        return hourString + ":" + minuteString + ":" + secondString;
     }
 
     public static String parseColoredString(String string){
@@ -204,6 +216,7 @@ public class API {
             lives = 0;
         }
         Config.getLives().set(uuid, lives);
+        Config.saveAll();
     }
 
     public static void changeLives(UUID uuid, int amount) {
@@ -212,27 +225,6 @@ public class API {
             lives = 0;
         }
         Config.getLives().set(uuid.toString(), lives);
-    }
-
-    public static void startTimer(final String player) {
-        UUID uuid = null;
-        try {
-            uuid = UUIDFetcher.getUUIDOf(player);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (uuid == null) {
-            return;
-        }
-        Config.getTimer().set(uuid.toString(), getBanLength() * 20);
         Config.saveAll();
-        final UUID finalUUID = uuid;
-        int id = Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(Main.getInstance(), new Runnable() {
-            public void run() {
-                Config.getTimer().set(finalUUID.toString(), Config.getTimer().getInt(finalUUID.toString()) - 1);
-                Config.saveAll();
-            }
-        }, 0, 20);
-        tasks.put(player, id);
     }
 }
