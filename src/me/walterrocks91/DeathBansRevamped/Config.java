@@ -7,15 +7,6 @@ import java.io.IOException;
 public class Config {
 
     /*
-     * Config:
-     *   ban-length: 90
-     *   timeframe: minute
-     *   kick-reason: '&cYou have died, and have now been deathbanned!'
-     *   ban-reason: '&cYou have been deathbanned for %remaining%. Please wait until the time is over to rejoin this server!'
-     *   lightning-strike: true
-     */
-
-    /*
      * Getting configuration files.
      */
     public static FileConfiguration getConfig(){
