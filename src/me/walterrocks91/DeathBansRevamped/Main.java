@@ -58,7 +58,6 @@ public class Main extends JavaPlugin {
                         API.sendMessage(sender, "&e/DeathBans unexempt <Player> &f- UnExempts a player from DeathBans.");
                         API.sendMessage(sender, "&e/DeathBans editlives <Give>|<Take> <Player> <Amount> &f- Edits a players lives.");
                         API.sendMessage(sender, "&e/DeathBans update &f- Updates DeathBans manually.");
-                        API.sendMessage(sender, "&e/DeathBans reload &f- Reloads DeathBans.");
                     }
                     return true;
                 }else if(args[0].equalsIgnoreCase("check")){
@@ -149,11 +148,6 @@ public class Main extends JavaPlugin {
                         target = args[1];
                     }
                     API.sendMessage(sender, "&ePlayer &a" + target + " &ehas &a" + API.getLives(target) + " &elives.");
-                } else if (args[0].equalsIgnoreCase("reload")) {
-                    if (sender.hasPermission("deathbans.admin")) {
-                        getServer().getPluginManager().disablePlugin(this);
-                        getServer().getPluginManager().enablePlugin(this);
-                    }
                 } else {
                     API.sendMessage(sender, "&cIncorrect / Invalid SubCommand.");
                     API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");

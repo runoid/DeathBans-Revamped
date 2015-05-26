@@ -43,6 +43,9 @@ public class DBUser {
                 if(Config.getTimer().getInt(u) <= 0){
                     Main.getInstance().getServer().getScheduler().cancelTask(banTask);
                     Config.getTimer().set(u, null);
+                    List<String> uuids = Config.getBans().getStringList("banned");
+                    uuids.remove(u);
+                    Config.getBans().set("banned", uuids);
                     Config.saveAll();
                     return;
                 }

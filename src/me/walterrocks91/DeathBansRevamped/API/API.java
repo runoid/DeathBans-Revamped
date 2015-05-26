@@ -51,7 +51,7 @@ public class API {
                 List<String> list = Config.getBans().getStringList("banned");
                 list.remove(uuid);
                 Config.getBans().set("banned", list);
-                Config.getTimer().set(uuid, null);
+                Config.getTimer().set(uuid, 0);
                 Config.saveAll();
                 return true;
             }
@@ -81,7 +81,7 @@ public class API {
         String tf = Config.getConfig().getString("timeframe");
         int multiplier = 0;
         if(tf.equalsIgnoreCase("second")){
-            // Do nothing.
+            multiplier = 1;
         }else if(tf.equalsIgnoreCase("minute")){
             multiplier = 60;
         }else if(tf.equalsIgnoreCase("hour")){
