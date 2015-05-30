@@ -1,12 +1,15 @@
 package me.walterrocks91.DeathBansRevamped.API;
 
 import me.walterrocks91.DeathBansRevamped.Config;
+import me.walterrocks91.DeathBansRevamped.Events.Custom.PlayerDeathbannedEvent;
 import me.walterrocks91.DeathBansRevamped.Main;
 import me.walterrocks91.DeathBansRevamped.Other.UUIDFetcher;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class API {
@@ -21,7 +24,11 @@ public class API {
         return instance;
     }
 
+    private static Set<String> co;
+
     private static String prefix = "";
+
+    private static int banTask;
 
     public static void sendMessage(CommandSender sender, String msg){
         prefix = API.parseColoredString(Config.getConfig().getString("prefix") + " &f");
@@ -229,5 +236,56 @@ public class API {
         }
         Config.getLives().set(uuid.toString(), lives);
         Config.saveAll();
+    }
+
+    public static void ban(Player player) {
+        if (Config.getExempt().getStringList("exempt").contains(player.getUniqueId().toString())) return;
+        PlayerDeathbannedEvent event = new PlayerDeathbannedEvent(player);
+        Main.getInstance().getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) return;
+        String uuid = player.getUniqueId().toString();
+        final String u = uuid;
+        List<String> list = Config.getBans().getStringList("banned");
+        if (list == null) {
+            list = new ArrayList<String>();
+        }
+        list.add(u);
+        Config.getBans().set("banned", list);
+        Config.getTimer().set(u, API.getLessenedBanLength(player));
+        Config.saveAll();
+        banTask = Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(Main.getInstance(), new Runnable() {
+            public void run() {
+                if (Config.getTimer().getInt(u) <= 0) {
+                    Main.getInstance().getServer().getScheduler().cancelTask(banTask);
+                    API.unban(UUID.fromString(u));
+                    return;
+                }
+                Config.getTimer().set(u, Config.getTimer().getInt(u) - 1);
+                Config.saveAll();
+            }
+        }, 0, 1 * 20);
+        player.kickPlayer(API.parseColoredString(API.getKickReason()));
+    }
+
+    public static int getLessenedBanLength(Player p) {
+        if (Config.getConfig().getConfigurationSection("perms").getKeys(false) == null) return API.getBanLength();
+        if (co == null) co = Config.getConfig().getConfigurationSection("perms").getKeys(false);
+        for (String perm : co) {
+            if (p.hasPermission("deathbans." + perm)) {
+                String tf = Config.getConfig().getString("perms." + perm + ".timeframe");
+                int multiplier = 0;
+                if (tf.equalsIgnoreCase("second")) {
+                    multiplier = 1;
+                } else if (tf.equalsIgnoreCase("minute")) {
+                    multiplier = 60;
+                } else if (tf.equalsIgnoreCase("hour")) {
+                    multiplier = 60 * 60;
+                } else if (tf.equalsIgnoreCase("day")) {
+                    multiplier = 60 * 60 * 24;
+                }
+                return API.getBanLength() - (Config.getConfig().getInt("perms." + perm + ".lessened-banlength") * multiplier);
+            }
+        }
+        return API.getBanLength();
     }
 }

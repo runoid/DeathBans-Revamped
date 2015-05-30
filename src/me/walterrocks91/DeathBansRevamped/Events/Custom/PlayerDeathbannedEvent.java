@@ -1,6 +1,6 @@
 package me.walterrocks91.DeathBansRevamped.Events.Custom;
 
-import me.walterrocks91.DeathBansRevamped.User.DBUser;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -18,14 +18,14 @@ public class PlayerDeathbannedEvent extends Event {
         return handlers;
     }
 
-    private DBUser user;
+    private Player p;
 
-    public PlayerDeathbannedEvent(DBUser u) {
-        user = u;
+    public PlayerDeathbannedEvent(Player p) {
+        this.p = p;
     }
 
-    public DBUser getUser() {
-        return user;
+    public Player getPlayer() {
+        return p;
     }
 
     public void setCancelled(boolean cancelled) {
