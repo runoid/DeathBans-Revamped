@@ -26,12 +26,10 @@ public class API {
 
     private static Set<String> co;
 
-    private static String prefix = "";
-
     private static int banTask;
 
     public static void sendMessage(CommandSender sender, String msg){
-        prefix = API.parseColoredString(Config.getConfig().getString("prefix") + " &f");
+        String prefix = API.parseColoredString(Config.getConfig().getString("prefix") + " &f");
         sender.sendMessage(prefix + parseColoredString(msg));
     }
 
@@ -243,8 +241,7 @@ public class API {
         PlayerDeathbannedEvent event = new PlayerDeathbannedEvent(player);
         Main.getInstance().getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
-        String uuid = player.getUniqueId().toString();
-        final String u = uuid;
+        final String u = player.getUniqueId().toString();
         List<String> list = Config.getBans().getStringList("banned");
         if (list == null) {
             list = new ArrayList<String>();
