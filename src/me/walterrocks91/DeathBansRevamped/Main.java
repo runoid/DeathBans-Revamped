@@ -148,7 +148,7 @@ public class Main extends JavaPlugin {
                             API.changeLives(sender.getName(), -1);
                             return true;
                         } else {
-                            API.sendMessage(sender, "&cThat player was not deathbanned.");
+                            API.sendMessage(sender, "&cThe player &f" + args[1] + " &cwas not deathbanned.");
                         }
                     } else {
                         API.sendMessage(sender, "&cYou do not have any lives to revive this player with!");
