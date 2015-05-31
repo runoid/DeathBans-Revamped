@@ -37,6 +37,7 @@ public class Main extends JavaPlugin {
                 if (args[0].equalsIgnoreCase("help")) {
                     API.sendMessage(sender, "&f-=[&cDeathBans Commands&f]=-");
                     API.sendMessage(sender, "&e/DeathBans lives <Player> &f- Shows a players current lives.");
+                    API.sendMessage(sender, "&e/DeathBans revive <Player> &fRevives a deathbanned player at the cost of 1 life.");
                     if(sender.hasPermission("deathbans.admin")) {
                         API.sendMessage(sender, "&f-=[&cDeathBans Admin Commands&f]=-");
                         API.sendMessage(sender, "&e/DeathBans check <Player> &f- Checks if a player is banned.");
@@ -135,6 +136,24 @@ public class Main extends JavaPlugin {
                         target = args[1];
                     }
                     API.sendMessage(sender, "&ePlayer &a" + target + " &ehas &a" + API.getLives(target) + " &elives.");
+                } else if (args[0].equalsIgnoreCase("revive")) {
+                    if (l != 2) {
+                        API.sendMessage(sender, "&cInvalid arguments");
+                        API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
+                        return true;
+                    }
+                    if (API.getLives(sender.getName()) >= 1) {
+                        if (API.unban(args[1])) {
+                            API.sendMessage(sender, "&aThe player &f" + args[1] + " &ahas been revived!");
+                            API.changeLives(sender.getName(), -1);
+                            return true;
+                        } else {
+                            API.sendMessage(sender, "&cThat player was not deathbanned.");
+                        }
+                    } else {
+                        API.sendMessage(sender, "&cYou do not have any lives to revive this player with!");
+                    }
+                    return false;
                 } else {
                     API.sendMessage(sender, "&cIncorrect / Invalid SubCommand.");
                     API.sendMessage(sender, "&eUse &f/DeathBans help &efor a list of all DeathBans commands.");
