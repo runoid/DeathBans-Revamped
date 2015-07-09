@@ -20,7 +20,7 @@ public class Manager {
 
     protected static void setup(Plugin p){
         try {
-            p.getConfig().options().copyDefaults(true);
+            p.getConfig().options().copyDefaults(p.getConfig().get("delay-ban") == null);
             if (!p.getDataFolder().exists()) p.getDataFolder().mkdir();
             System.out.println("Config checks / Generation starting.");
             if (bansF == null) bansF = new File(p.getDataFolder(), "bans.yml");

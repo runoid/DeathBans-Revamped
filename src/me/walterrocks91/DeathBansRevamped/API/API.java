@@ -5,6 +5,7 @@ import me.walterrocks91.DeathBansRevamped.Events.Custom.PlayerDeathbannedEvent;
 import me.walterrocks91.DeathBansRevamped.Main;
 import me.walterrocks91.DeathBansRevamped.Other.UUIDFetcher;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -51,12 +52,13 @@ public class API {
     }
     public static boolean unban(String player){
         try {
+            ConfigurationSection s = Config.getTimer().getConfigurationSection("timer");
             String uuid = UUIDFetcher.getUUIDOf(player).toString();
             if(checkBan(player)){
                 List<String> list = Config.getBans().getStringList("banned");
                 list.remove(uuid);
                 Config.getBans().set("banned", list);
-                Config.getTimer().set(uuid, 0);
+                s.set(uuid, null);
                 Config.saveAll();
                 return true;
             }
@@ -66,11 +68,12 @@ public class API {
         return false;
     }
     public static boolean unban(UUID uuid){
+        ConfigurationSection s = Config.getTimer().getConfigurationSection("timer");
         if(checkBan(uuid)) {
             List<String> list = Config.getBans().getStringList("banned");
             list.remove(uuid.toString());
             Config.getBans().set("banned", list);
-            Config.getTimer().set(uuid.toString(), null);
+            s.set(uuid.toString(), null);
             Config.saveAll();
             return true;
         }
@@ -238,30 +241,31 @@ public class API {
 
     public static void ban(Player player) {
         if (Config.getExempt().getStringList("exempt").contains(player.getUniqueId().toString())) return;
+        final String u = player.getUniqueId().toString();
+        final ConfigurationSection s = Config.getTimer().getConfigurationSection("timer");
         PlayerDeathbannedEvent event = new PlayerDeathbannedEvent(player);
         Main.getInstance().getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
-        final String u = player.getUniqueId().toString();
         List<String> list = Config.getBans().getStringList("banned");
         if (list == null) {
             list = new ArrayList<String>();
         }
         list.add(u);
         Config.getBans().set("banned", list);
-        Config.getTimer().set(u, API.getLessenedBanLength(player));
+        s.set(u, API.getLessenedBanLength(player));
         Config.saveAll();
         banTask = Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(Main.getInstance(), new Runnable() {
             public void run() {
-                if (Config.getTimer().getInt(u) <= 0) {
+                if (s.getInt(u) <= 0) {
                     Main.getInstance().getServer().getScheduler().cancelTask(banTask);
                     API.unban(UUID.fromString(u));
                     return;
                 }
-                Config.getTimer().set(u, Config.getTimer().getInt(u) - 1);
+                s.set(u, s.getInt(u) - 1);
                 Config.saveAll();
             }
-        }, 0, 1 * 20);
-        player.kickPlayer(API.parseColoredString(API.getKickReason()));
+        }, 0, 20);
+        if (player != null) player.kickPlayer(API.parseColoredString(API.getKickReason()));
     }
 
     public static int getLessenedBanLength(Player p) {
